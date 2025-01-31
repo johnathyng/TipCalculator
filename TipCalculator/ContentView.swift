@@ -14,10 +14,17 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            
             Text("Tip Calculator")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-           
+                .padding(.vertical)
+            
+            Image(systemName: "dollarsign.ring")
+                .resizable()
+                .scaledToFit()
+                .padding(.vertical)
+                
             // Bill Stack
             VStack {
                 Text ("Bill Amount")
@@ -27,6 +34,7 @@ struct ContentView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                 Slider(value: $billAmount, in: 0...450)
+                    .frame(width: 350)
             }
             
             // Tip Stack
@@ -38,8 +46,9 @@ struct ContentView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                 Slider(value: $tipPercent, in: 0...100)
+                    .frame(width: 350)
             }
-            
+           
             // People Stack
             VStack {
                 Text ("Number of People")
@@ -49,19 +58,23 @@ struct ContentView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                 Slider(value: $numPeople, in: 1...12)
+                    .frame(width: 350)
             }
+            
             
             Button {
                 
             } label: {
                 Text("Calculate")
+                    .frame(width: 300)
                     .padding()
                     .foregroundColor(.white)
                     .background(Color.black)
                     .cornerRadius(10)
             }
+            .padding(.vertical, 100)
+            
         }
-        .padding()
     }
 }
 
