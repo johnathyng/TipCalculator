@@ -52,7 +52,7 @@ struct ContentView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundColor(Color("Tip"))
-                Slider(value: $tipPercent, in: 0...100)
+                Slider(value: $tipPercent, in: 0...100, step: 1.0)
                     .frame(width: 350)
                     .accentColor(Color("Tip"))
             }
@@ -67,7 +67,7 @@ struct ContentView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundColor(Color("People"))
-                Slider(value: $numPeople, in: 1...12)
+                Slider(value: $numPeople, in: 1...12, step: 1.0)
                     .frame(width: 350)
                     .accentColor(Color("People"))
             }
@@ -94,10 +94,22 @@ struct ContentView: View {
         
     }
     
+    // Function for calculating tip
+    func calculateTip(bill: Double, tip: Double) -> Double {
+        let calculatedTip = bill * (tip / 100)
+        return calculatedTip
+    }
+    
     // Function for calculating total
     func calculate(bill: Double, tip: Double, people: Double) -> Double {
-        let calculatedTotal = ((bill * (tip / 100)) + bill) / people
+        let calculatedTotal = ((bill * (tip / 100)) + bill)
         return calculatedTotal
+    }
+    
+    // Function for calculating amount per person
+    func perPerson(bill: Double, tip: Double, people: Double) -> Double {
+        let perPersonTotal = ((bill * (tip / 100)) + bill) / people
+        return perPersonTotal
     }
 }
 
