@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var total: Double = 0.00
     @State private var totalTipAmount: Double = 0.00
     @State private var pricePerPerson: Double = 0.00
+    @State var displayResults = false
+    @State private var hideResults = "Hide Results"
     
     var body: some View {
         VStack {
@@ -26,6 +28,7 @@ struct ContentView: View {
                 .resizable()
                 .scaledToFit()
                 .padding(.vertical)
+                .frame(width: 150, height: 150)
             
             // Bill Stack
             VStack {
@@ -37,9 +40,10 @@ struct ContentView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundColor(Color("Bill"))
-                Slider(value: $billAmount, in: 0...450)
+                Slider(value: $billAmount, in: 0...500)
                     .frame(width: 350)
                     .accentColor(Color("Bill"))
+                    .shadow(radius: 10)
             }
             
             // Tip Stack
@@ -52,9 +56,10 @@ struct ContentView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundColor(Color("Tip"))
-                Slider(value: $tipPercent, in: 0...100, step: 1.0)
+                Slider(value: $tipPercent, in: 0...30, step: 1.0)
                     .frame(width: 350)
                     .accentColor(Color("Tip"))
+                    .shadow(radius: 10)
             }
             
             // People Stack
@@ -67,30 +72,73 @@ struct ContentView: View {
                     .font(.title)
                     .fontWeight(.semibold)
                     .foregroundColor(Color("People"))
-                Slider(value: $numPeople, in: 1...12, step: 1.0)
+                Slider(value: $numPeople, in: 1...20, step: 1.0)
                     .frame(width: 350)
                     .accentColor(Color("People"))
+                    .shadow(radius: 10)
             }
             
             // Total display
             VStack {
-                Text ("Total: $ \(total, specifier: "%.2f")")
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.black)
+               
                 Button {
+                    displayResults.toggle()
+                    hideResults = displayResults ? "Hide Results" : "Calculate"
+                    
                     total = calculate(bill: billAmount, tip: tipPercent, people: numPeople)
+                    
+                    totalTipAmount = calculateTip(bill: billAmount, tip: tipPercent)
+                    print(displayResults)
+                    
+                    pricePerPerson = perPerson(bill: total, people: numPeople)
                 } label: {
-                    Text("Calculate")
-                        .frame(width: 300)
-                        .padding()
-                        .foregroundColor(.white)
-                        .background(Color.black)
-                        .cornerRadius(10)
+                    
+                    if displayResults == true {
+                        Text(hideResults)
+                            .frame(width: 300)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(Color.red)
+                            .cornerRadius(15)
+                            .shadow(radius: 10)
+                    }
+                    else {
+                        Text(hideResults)
+                            .frame(width: 300)
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(Color.blue)
+                            .cornerRadius(15)
+                            .shadow(radius: 10)
+                    }
                 }
-                .padding(.vertical, 100)
+                .padding(.vertical)
+              
+                    
+                if displayResults {
+                    VStack {
+                        Text("Total: $ \(total, specifier: "%.2f")")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                        Text("Tip Amount: $ \(totalTipAmount, specifier: "%.2f")")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                        Text("Price per Person: $ \(pricePerPerson, specifier: "%.2f")")
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                    }
+                    .frame(width: 300, height: 100)
+                    .background(.white)
+                    .cornerRadius(15)
+                    .shadow(radius: 10)
+                    .padding(.vertical, 5)
+                }
             }
         }
+        Spacer()
         
     }
     
@@ -107,8 +155,8 @@ struct ContentView: View {
     }
     
     // Function for calculating amount per person
-    func perPerson(bill: Double, tip: Double, people: Double) -> Double {
-        let perPersonTotal = ((bill * (tip / 100)) + bill) / people
+    func perPerson(bill: Double, people: Double) -> Double {
+        let perPersonTotal = bill / people
         return perPersonTotal
     }
 }
